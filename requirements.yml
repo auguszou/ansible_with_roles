@@ -1,0 +1,14 @@
+# requirements.yml
+#
+# ruby
+- src: mediapeers.ruby
+# rvm
+- src: rvm_io.ruby
+
+# mysql server
+- src: geerlingguy.mysql
+
+# redis server
+- src: stone-payments.redis
+
+

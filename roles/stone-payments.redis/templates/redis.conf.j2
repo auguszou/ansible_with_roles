@@ -1,0 +1,96 @@
+# /etc/redis.conf
+# {{ ansible_managed }}
+
+# System
+daemonize {{ 'yes' if redis_srv_sys_daemonize else 'no' }}
+pidfile {{ redis_srv_sys_pidFile }}
+
+# Connections
+port {{ redis_srv_conn_port }}
+bind {{ redis_srv_conn_bind }}
+{% if redis_srv_conn_socketPath -%}
+unixsocket {{ redis_srv_conn_socketPath }}
+unixsocketperm {{ redis_srv_conn_socketPerm }}
+{% endif -%}
+timeout {{ redis_srv_conn_timeout }}
+tcp-keepalive {{ redis_srv_conn_tcpKeepalive }}
+tcp-backlog {{ redis_srv_conn_tcpBacklog }}
+
+# Storage
+databases {{ redis_srv_stor_databases }}
+dir {{ redis_srv_stor_dir }}
+dbfilename {{ redis_srv_stor_dbFile }}
+{% for save in redis_srv_stor_save -%}
+save {{ save }}
+{% endfor -%}
+stop-writes-on-bgsave-error {{ 'yes' if redis_srv_stor_stopWritesOnBgSaveError else 'no' }}
+rdbcompression {{ 'yes' if redis_srv_stor_rdbCompression else 'no' }}
+rdbchecksum {{ 'yes' if redis_srv_stor_rdbChecksum else 'no' }}
+appendonly {{ 'yes' if redis_srv_stor_appendOnly else 'no' }}
+appendfilename {{ redis_srv_stor_appendFile }}
+appendfsync {{ redis_srv_stor_appendFsync }}
+no-appendfsync-on-rewrite {{ redis_srv_stor_noAppendFsyncOnRewrite }}
+auto-aof-rewrite-percentage {{ redis_srv_stor_autoAofRewritePercentage }}
+auto-aof-rewrite-min-size {{ redis_srv_stor_autoAofRewriteMinSize }}
+
+# Security
+{% if redis_srv_sec_password -%}
+masterauth {{ redis_srv_sec_password }}
+requirepass {{ redis_srv_sec_password }}
+{% endif %}
+{% for command in redis_srv_sec_renameCommands %}
+rename-command {{ command }}
+{% endfor %}
+
+# Replication
+{% if not redis_srv_repl_isMaster -%}
+slaveof {{ redis_srv_repl_masterAddr }}
+{% endif %}
+slave-serve-stale-data yes
+slave-read-only {{ 'yes' if redis_srv_repl_slaveReadOnly else 'no' }}
+repl-disable-tcp-nodelay {{ 'yes' if not redis_srv_repl_tcpNodelay else 'no' }}
+{% if redis_srv_repl_backlogSize -%}
+repl-backlog-size {{ redis_srv_repl_backlogSize }}
+{% endif %}
+slave-priority {{ redis_srv_repl_slavePriority }}
+{% if redis_srv_repl_minSlavesToWrite -%}
+min-slaves-to-write {{ redis_srv_repl_minSlavesToWrite }}
+{% endif %}
+{% if redis_srv_repl_minSlavesMaxLag -%}
+min-slaves-max-lag {{ redis_srv_repl_minSlavesMaxLag }}
+{% endif %}
+
+# Log
+logfile {{ redis_srv_log_file }}
+loglevel {{ redis_srv_log_level }}
+syslog-enabled {{ 'yes' if redis_srv_log_syslog else 'no' }}
+{% if redis_srv_log_syslog -%}
+syslog-ident {{ redis_srv_log_syslogIdent }}
+syslog-facility {{ redis_srv_log_syslogFacility }}
+{%- endif %}
+slowlog-log-slower-than {{ redis_srv_log_slowLowerThan }}
+slowlog-max-len {{ redis_srv_log_slowMaxLen }}
+notify-keyspace-events ""
+
+# Limits
+maxclients {{ redis_srv_lim_maxClients }}
+{% if redis_srv_lim_maxMem -%}
+maxmemory {{ redis_srv_lim_maxMem }}
+{%- endif %}
+maxmemory-policy {{ redis_srv_lim_maxMemPol }}
+lua-time-limit 5000
+
+# Advanced
+hash-max-ziplist-entries 512
+hash-max-ziplist-value 64
+list-max-ziplist-entries 512
+list-max-ziplist-value 64
+set-max-intset-entries 512
+zset-max-ziplist-entries 128
+zset-max-ziplist-value 64
+activerehashing yes
+client-output-buffer-limit normal 0 0 0
+client-output-buffer-limit slave 256mb 64mb 60
+client-output-buffer-limit pubsub 32mb 8mb 60
+hz 10
+aof-rewrite-incremental-fsync yes

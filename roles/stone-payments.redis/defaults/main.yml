@@ -1,0 +1,83 @@
+---
+## Installation options
+redis_install_enabled: true
+redis_install_selinux: true
+
+# Version
+redis_install_ver_major: 3
+redis_install_ver_minor: 2
+redis_install_ver_patch: "*"
+
+
+## Server options
+redis_srv_enabled: true
+
+# Connection
+redis_srv_conn_bind: 127.0.0.1
+redis_srv_conn_port: 6379
+redis_srv_conn_socketPath: false
+redis_srv_conn_socketPerm: 755
+redis_srv_conn_tcpBacklog: 511
+redis_srv_conn_tcpKeepalive: 0
+redis_srv_conn_timeout: 0
+
+# Storage
+redis_srv_stor_dir: "/var/lib/redis"
+redis_srv_stor_databases: 16
+redis_srv_stor_rdbCompression: true
+redis_srv_stor_rdbChecksum: true
+redis_srv_stor_stopWritesOnBgSaveError: true
+redis_srv_stor_appendOnly: true
+redis_srv_stor_appendFsync: "everysec"
+redis_srv_stor_noAppendFsyncOnRewrite: "no"
+redis_srv_stor_autoAofRewritePercentage: "100"
+redis_srv_stor_autoAofRewriteMinSize: "64mb"
+redis_srv_stor_save:
+  - 900 1
+  - 300 10
+  - 60 10000
+
+# Security
+redis_srv_sec_password: false
+redis_srv_sec_renameCommands: []
+
+# Replication
+redis_srv_repl_isMaster: true
+redis_srv_repl_masterAddr: ""
+redis_srv_repl_slaveReadOnly: true
+redis_srv_repl_slavePriority: 100
+redis_srv_repl_tcpNodelay: true
+redis_srv_repl_minSlavesToWrite: 0
+redis_srv_repl_minSlavesMaxLag: 10
+redis_srv_repl_backlogSize: false
+
+# Log
+redis_srv_log_level: "notice"
+redis_srv_log_slowLowerThan: 10000
+redis_srv_log_slowMaxLen: 128
+
+# Limits
+redis_srv_lim_noFile: 16384
+redis_srv_lim_maxClients: 10000
+redis_srv_lim_maxMem: false
+redis_srv_lim_maxMemPol: "noeviction"
+
+
+## Sentinel options
+redis_sent_enabled: false
+
+# Storage
+redis_sent_stor_dir: "/var/lib/redis"
+
+# Connection
+redis_sent_conn_bind: 0.0.0.0
+redis_sent_conn_port: 26379
+
+# Monitors
+redis_sent_monitors:
+  - name: master01
+    host: localhost
+    port: 6379
+    quorum: 2
+    auth_pass: ant1r3z
+    down_after_milliseconds: 30000

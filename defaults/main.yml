@@ -1,0 +1,24 @@
+---
+
+# Ruby
+
+# RVM
+rvm1_install_flags: '--auto-dotfiles --user-install'
+rvm1_install_path: '/home/{{ ansible_user }}/.rvm'
+
+# MySQL 5.6.x
+#
+mysql_packages:
+  - 'mysql-server-5.6'
+  - 'mysql-client-5.6'
+mysql_root_username: root
+mysql_root_password: 123
+mysql_root_password_update: 'no'
+mysql_enabled_on_startup: yes
+mysql_users:
+  - name: ubuntu
+    host: "%"
+    password: 123
+    priv: "*.*:ALL"
+
+# Redis Server
