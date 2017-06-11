@@ -1,0 +1,59 @@
+---
+- name: Check ruby version
+  command: ruby -v
+  failed_when: "'{{ruby_version}}' not in ruby_v.stdout"
+  register: ruby_v
+  changed_when: False
+  ignore_errors: yes
+  tags:
+    - ruby-build
+
+- name: Ruby package dependencies
+  apt: name={{item}} state=latest update_cache=yes cache_valid_time=3600
+  when: ruby_v|failed
+  with_items: ruby_packages
+  tags:
+    - ruby-build
+
+- name: Create directory
+  file: path=/opt state=directory
+  when: ruby_v|failed
+  tags:
+    - ruby-build
+
+- name: checkout  Ruby-Build from git
+  git:
+    force: yes
+    repo: https://github.com/sstephenson/ruby-build.git
+    dest: /opt/ruby-build
+  register: newbuild
+  when: ruby_v|failed
+  tags:
+    - ruby-build
+
+- name: Update ruby list
+  command: /opt/ruby-build/install.sh
+  changed_when: False
+  when: ruby_v|failed
+  tags:
+    - ruby-build
+
+- name: Install Ruby version {{ruby_version}}
+  command: ruby-build -s {{ruby_version}} /usr
+  when: ruby_v|failed
+  tags:
+    - ruby-build
+
+- name: Install default Gems (latest)
+  gem: name={{item.name}} state=latest user_install=no
+  when: "{{item.version is not defined}}"
+  with_items: ruby_gems
+  tags:
+    - ruby-build
+
+- name: Install default Gems (present)
+  gem: name={{item.name}} state=present version={{item.version}} user_install=no
+  when: "{{item.version is defined}}"
+  with_items: ruby_gems
+  tags:
+    - ruby-build

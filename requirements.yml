@@ -1,7 +1,8 @@
 # requirements.yml
-#
+
 # ruby
-- src: mediapeers.ruby
+- src: ant31.ruby-build
+
 # rvm
 - src: rvm_io.ruby
 

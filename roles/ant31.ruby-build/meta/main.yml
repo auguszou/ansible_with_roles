@@ -1,0 +1,9 @@
+---
+galaxy_info:
+  author: Antoine Legrand
+  description: Compile and Install a Ruby version system wide
+  license: MIT
+  min_ansible_version: 1.9
+  categories:
+  - system
+dependencies: []
