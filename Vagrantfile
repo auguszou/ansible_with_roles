@@ -9,7 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", inline: "sudo locale-gen en_US.UTF-8"
 
   config.vm.define "ubuntu" do |ubuntu|
-    ubuntu.vm.box = "ubuntu/trusty64"
+    ubuntu.vm.box = "ubuntu-14.04"
     ubuntu.vm.network "private_network", ip: "192.168.56.2"
     ubuntu.vm.provision "ansible" do |ansible|
       ansible.playbook = "playbook.yml"

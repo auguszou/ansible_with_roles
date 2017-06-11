@@ -9,6 +9,10 @@
     - defaults/main.yml
 
   roles:
+    - { role: mediapeers.ruby,
+        tags: ruby,
+        ruby_version_string: 2.2.3
+      }
     - { role: rvm_io.ruby,
         tags: ruby,
         rvm1_rubies: ['ruby-2.3.1'],
@@ -16,6 +20,9 @@
       }
     - { role: geerlingguy.mysql,
         tags: mysql
+      }
+    - { role: stone-payments.redis,
+        tags: redis
       }
 
 # vim:ft=ansible:
